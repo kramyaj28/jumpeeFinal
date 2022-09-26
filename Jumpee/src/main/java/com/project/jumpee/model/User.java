@@ -49,26 +49,35 @@ public class User {
 	
 	@Column(nullable = false)
 	private String password;
+	
+	@JsonView(View.Base.class)
+	private String contactPerson;
+	
+	@JsonView(View.Base.class)
+	private String contactPersonNumber;
+	
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "user_roles",
 	joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
 	inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Set<Role> roles;
 
+	@JsonView(View.Base.class)
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
-	private List<OtherDetails> otherDetails;
+	private List<Address> addresses;
 	
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
 	private List<Wallet> wallet;
 	
-	private int status = 0;
+	
+	private int status;
 	
 	public User() {}
 
 	public User(String firstName, String lastName, String email, String mobileNumber, String password, Set<Role> roles,
-			List<OtherDetails> otherDetails) {
+			List<Address> otherDetails) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -76,7 +85,7 @@ public class User {
 		this.mobileNumber = mobileNumber;
 		this.password = password;
 		this.roles = roles;
-		this.otherDetails = otherDetails;
+		this.addresses = otherDetails;
 	}
 
 	public long getId() {
@@ -135,12 +144,12 @@ public class User {
 		this.roles = roles;
 	}
 
-	public List<OtherDetails> getOtherDetails() {
-		return otherDetails;
+	public List<Address> getOtherDetails() {
+		return addresses;
 	}
 
-	public void setOtherDetails(List<OtherDetails> otherDetails) {
-		this.otherDetails = otherDetails;
+	public void setOtherDetails(List<Address> otherDetails) {
+		this.addresses = otherDetails;
 	}
 
 	public int getStatus() {
@@ -149,6 +158,22 @@ public class User {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public String getContactPerson() {
+		return contactPerson;
+	}
+
+	public void setContactPerson(String contactPerson) {
+		this.contactPerson = contactPerson;
+	}
+
+	public String getContactPersonNumber() {
+		return contactPersonNumber;
+	}
+
+	public void setContactPersonNumber(String contactPersonNumber) {
+		this.contactPersonNumber = contactPersonNumber;
 	}
 
 	

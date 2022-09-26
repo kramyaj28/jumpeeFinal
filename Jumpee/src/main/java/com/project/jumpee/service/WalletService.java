@@ -10,7 +10,7 @@ import com.project.jumpee.repository.UserRepository;
 import com.project.jumpee.repository.WalletRepository;
 
 @Service
-public class AddWalletBalanceService {
+public class WalletService {
 
 	@Autowired
 	private WalletRepository walletRepository;
@@ -29,9 +29,19 @@ public class AddWalletBalanceService {
 		Wallet currentBalanceWallet = walletRepository.getWalletBalance(user.getId());
 		wallet.setWalletBalance(request.getWalletBalance()+currentBalanceWallet.getWalletBalance());
 		walletRepository.save(wallet);
-		
+
 		return wallet;
 	}
 
+	public Wallet viewWalletBalance (Wallet request) {
+
+		if(!userRepository.existsByStatus(1)) {
+			throw new LoginFirstException("");
+		}
+
+		User user = userRepository.getUserByStatus(1);
+		Wallet wallet = walletRepository.getWalletBalance(user.getId());
+		return wallet;	
+	}
 
 }

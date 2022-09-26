@@ -11,21 +11,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.project.jumpee.dto.OtherDetailsDto;
+import com.project.jumpee.dto.ChangeResetPasswordDto;
 import com.project.jumpee.exception.View;
-import com.project.jumpee.model.OtherDetails;
-import com.project.jumpee.service.UpdateOtherDetailsService;
+import com.project.jumpee.model.User;
+import com.project.jumpee.service.PasswordService;
 
 @RestController
 @RequestMapping("/api/auth")
-public class UpdateAccountDetailsController {
+public class PasswordController {
 
-    @Autowired
-	private UpdateOtherDetailsService updateOtherDetailsService;
+	@Autowired
+	private PasswordService passwordService;
 
-	@PutMapping("/edit-details")
+	@PutMapping("/change-password")
+	public String changePassword(@Valid @RequestBody ChangeResetPasswordDto request) {
+		return passwordService.changePassword(request);
+	}
+	
 	@JsonView(View.Base.class)
-    public ResponseEntity<OtherDetails> editUserDetails(@Valid @RequestBody OtherDetailsDto request){
-        return new ResponseEntity<OtherDetails>(updateOtherDetailsService.updateOtherDetails(request), HttpStatus.OK);
-    }
+	@PutMapping("/reset-password")
+	public ResponseEntity<User> resetPassword(@Valid @RequestBody ChangeResetPasswordDto request) {
+		return new ResponseEntity<User>(passwordService.resetPassword(request), HttpStatus.OK);
+	}
+	
 }

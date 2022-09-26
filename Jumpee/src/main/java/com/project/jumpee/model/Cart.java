@@ -23,7 +23,6 @@ public class Cart {
 	@JsonView(View.Base.class)
 	private long productId;
 	
-	@JsonView(View.Base.class)
 	private byte paymentStatus;
 	private byte checkOutStatus;
 	

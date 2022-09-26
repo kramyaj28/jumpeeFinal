@@ -8,14 +8,14 @@ import org.springframework.stereotype.Service;
 import com.project.jumpee.exception.InsufficientBalanceException;
 import com.project.jumpee.exception.LoginFirstException;
 import com.project.jumpee.model.Cart;
-import com.project.jumpee.model.Orders;
-import com.project.jumpee.model.OtherDetails;
+import com.project.jumpee.model.Order;
+import com.project.jumpee.model.Address;
 import com.project.jumpee.model.Product;
 import com.project.jumpee.model.User;
 import com.project.jumpee.model.Wallet;
 import com.project.jumpee.repository.CartRepository;
 import com.project.jumpee.repository.OrderRepository;
-import com.project.jumpee.repository.OtherDetailsRepository;
+import com.project.jumpee.repository.AddressRepository;
 import com.project.jumpee.repository.ProductRepository;
 import com.project.jumpee.repository.UserRepository;
 import com.project.jumpee.repository.WalletRepository;
@@ -39,32 +39,32 @@ public class CheckoutService {
 	private WalletRepository walletRepository;
 	
 	@Autowired
-	private OtherDetailsRepository otherDetailsRepository;
+	private AddressRepository addressRepository;
 	
-	public Cart checkout(Orders request) {
+	public Order checkout(Order request) {
 		
 		if(!userRepository.existsByStatus(1)) {
 			throw new LoginFirstException("");
 		}
 		
-//		if(cartRepository.findByCheckOutStatus(0))
 		User user = userRepository.getUserByStatus(1);
-		Cart cart = cartRepository.findById(request.getOrderId());
-		OtherDetails addressDetails = otherDetailsRepository.findByUserId(user.getId());
+		Cart cart = cartRepository.getByCartId(user.getId(), request.getCartId());
+		Address address = addressRepository.getAddressId(user.getId());
+		Order order = new Order();
+		order.setAddress(address.getAddress());
+		order.setFirstName(user.getFirstName());
+		order.setLastName(user.getLastName());
+		order.setAddress(address.getAddress());
+		order.setCartId(cart.getId());
+		order.setTimeOrderPlaced(LocalDateTime.now());
+		order.setTotalAmount(cart.getTotalAmount());
+		order.setUserId(cart.getUserId());
 		updateWallet(user.getId(), cart.getTotalAmount());
-		request.setCartId(cart.getId());
-		request.setUserId(user.getId());
-		request.setTotalAmount(cart.getTotalAmount());
-		request.setTimeOrderPlaced(LocalDateTime.now());
-		request.setFirstName(user.getFirstName());
-		request.setLastName(user.getLastName());
-		request.setAddress(addressDetails.getAddress1());
-//		checkIfPaid(request.getCartId());
-		orderRepository.save(request);
-		updatePaidStatus(request.getCartId());
-		updateCheckOutStatus(request.getCartId());
+		updatePaidStatus(cart.getId());
+		updateCheckOutStatus(cart.getId());
 		updateQuantity(cart.getProductId(), cart.getQuantity());
-		return cart;
+		orderRepository.save(order);
+		return order;
 	}
 	
 	public void updateWallet(long userId, float totalAmount) {

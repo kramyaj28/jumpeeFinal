@@ -35,26 +35,32 @@ public class RegistrationService {
 	@Autowired
 	private WalletRepository walletRepository;
 	
-	public User registerUser(RegisterDto requestDto) {
+	public User registerUser(RegisterDto request) {
 
-		if(userRepository.existsByEmail(requestDto.getEmail())) {
+		if(userRepository.existsByEmail(request.getEmail())) {
 			throw new EmailExistsException("");
 		}
 
-		if(userRepository.existsByMobileNumber(requestDto.getMobileNumber())) {
+		if(userRepository.existsByMobileNumber(request.getMobileNumber())) {
+			throw new MobileNumberExistsException("");
+		}
+		
+		if(userRepository.existsByContactPersonNumber(request.getContactPersonNumber())) {
 			throw new MobileNumberExistsException("");
 		}
 
-		if(!requestDto.getPassword().equals(requestDto.getConfirmPassword())) {
+		if(!request.getPassword().equals(request.getConfirmPassword())) {
 			throw new PasswordNotMatchException("");
 		}
 
 		User user = new User();
-		user.setFirstName(requestDto.getFirstName());
-		user.setLastName(requestDto.getLastName());
-		user.setEmail(requestDto.getEmail());
-		user.setMobileNumber(requestDto.getMobileNumber());
-		user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+		user.setFirstName(request.getFirstName());
+		user.setLastName(request.getLastName());
+		user.setEmail(request.getEmail());
+		user.setMobileNumber(request.getMobileNumber());
+		user.setPassword(passwordEncoder.encode(request.getPassword()));
+		user.setContactPerson(request.getContactPerson());
+		user.setContactPersonNumber(request.getContactPersonNumber());
 		Role roles = roleRepository.findByRoleName("USER").get();
 		user.setRoles(Collections.singleton(roles));
 		userService.registerUser(user);

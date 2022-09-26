@@ -5,48 +5,47 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.project.jumpee.exception.View;
 
 @Entity
-public class Wallet {
+public class Address {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
+	@JsonView(View.Base.class)
 	private long id;
 	
-	@JsonView(View.Base.class)
-	private float walletBalance;
-	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
 	private User user;
 	
-	public Wallet() {}
-
-	public Wallet(float walletBalance) {
-		super();
-		this.walletBalance = walletBalance;
-	}
-
+	@JsonView(View.Base.class)
+	private String address;
+	
+	@JsonView(View.Base.class)
+	private Boolean isDefault = false;
+	
+	public Address() {}
+	
 	public long getId() {
 		return id;
 	}
-
+	
 	public void setId(long id) {
 		this.id = id;
 	}
-
-	public float getWalletBalance() {
-		return walletBalance;
+	
+	public String getAddress() {
+		return address;
 	}
-
-	public void setWalletBalance(float walletBalance) {
-		this.walletBalance = walletBalance;
+	
+	public void setAddress(String address) {
+		this.address = address;
 	}
-
+	
 	public User getUser() {
 		return user;
 	}
@@ -54,7 +53,13 @@ public class Wallet {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
-	
-	
+
+	public Boolean getIsDefault() {
+		return isDefault;
+	}
+
+	public void setIsDefault(Boolean isDefault) {
+		this.isDefault = isDefault;
+	}
+
 }

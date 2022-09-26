@@ -6,27 +6,25 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
-public class Orders {
+@Table(name = "orders")
+public class Order {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long orderId;
-	
-	private long cartId;
-	private long userId;
 	private String firstName;
 	private String lastName;
 	private String address;
+	private long cartId;
+	private long userId;
 	
 	private LocalDateTime timeOrderPlaced;
 	private float totalAmount;
 
-	
-	
-
-	public Orders(long cartId, long userId, String firstName, String lastName, String address,
+	public Order(long cartId, long userId, String firstName, String lastName, String address,
 			LocalDateTime timeOrderPlaced, float totalAmount) {
 		super();
 		this.cartId = cartId;
@@ -39,7 +37,7 @@ public class Orders {
 	}
 
 
-	public Orders () {}
+	public Order () {}
 
 
 	public long getOrderId() {

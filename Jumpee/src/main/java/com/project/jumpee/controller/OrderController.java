@@ -7,22 +7,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import com.project.jumpee.exception.View;
-import com.project.jumpee.model.Cart;
-import com.project.jumpee.service.ViewCartService;
+import com.project.jumpee.model.Order;
+import com.project.jumpee.service.OrderService;
 
 @RestController
 @RequestMapping("/api/auth")
-public class ViewCartController {
+public class OrderController {
 
 	@Autowired
-	private ViewCartService viewCartService;
+	private OrderService orderService;
 	
-	@GetMapping("/view-cart")
-	@JsonView(View.Base.class)
-	public List<Cart>  cart() {
-		return viewCartService.cart();
+	@GetMapping("/view-order-history")
+	public List<Order>	viewOrderHistory() {
+		return orderService.viewHistory();
 	}
-	
 }

@@ -16,6 +16,9 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
 	Boolean existsByPaymentStatus(byte status);
 	Boolean existsByUserId(long UserId);
 	
+	@Query(value = "select * from cart where user_id=:userId and id=:cartId", nativeQuery = true)
+	Cart getByCartId(Long userId, long cartId);
+	
 	@Query(value = "SELECT * from cart where user_id=:userId and payment_status=0", nativeQuery = true)
 	List<Cart> getByUserId(long userId);
 	
